@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
     private SpriteRenderer sp;
+    private bool double_jump = false;
 
     private enum MovementState { idle, running, jumping, falling}
 
@@ -35,11 +36,20 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
         
 
-        if (Input.GetButtonDown("Jump") && isGrounded())
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x,jumpForce);
+            if (isGrounded()) {
+                rb.velocity = new Vector2(rb.velocity.x,jumpForce);
+                double_jump = true;
+            }
+            else {
+                if (double_jump) {
+                    double_jump = false;
+                    rb.velocity = new Vector2(rb.velocity.x,jumpForce);
+                }
+            }
+            
         }
-
         UpdateAnimationUpdate();
 
     }
